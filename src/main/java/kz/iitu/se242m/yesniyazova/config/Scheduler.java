@@ -1,6 +1,8 @@
 package kz.iitu.se242m.yesniyazova.config;
 
+import kz.iitu.se242m.yesniyazova.service.AirQualityService;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -9,6 +11,11 @@ import org.springframework.stereotype.Component;
 public class Scheduler {
 
     // private final NotificationService notificationService;
+
+    @Autowired
+    private AirQualityService airQualityService;
+
+    private static boolean historyDone = false;
 
     @Scheduled(cron = "0 */5 * * * *") // Every 5 minutes
     public void sendPendingUserNotifications() {
@@ -23,6 +30,20 @@ public class Scheduler {
         */
 
         log.info("[SCHEDULER] Notification check completed.");
+    }
+
+    @Scheduled(cron = "0 */10 * * * *")
+    void hourlyAirQualityCheck() {
+        log.info("[SCHEDULER] Updating air quality data...");
+        airQualityService.pullCurrent();
+        log.info("[SCHEDULER] Air quality update completed.");
+    }
+
+    @Scheduled(initialDelay = 10_000, fixedDelay = Long.MAX_VALUE)
+    void backfillOnce() {
+        if (historyDone) return;
+        airQualityService.backfillHistory();
+        historyDone = true;
     }
 
 }

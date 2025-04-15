@@ -7,7 +7,6 @@ import kz.iitu.se242m.yesniyazova.repository.UserRepository;
 import kz.iitu.se242m.yesniyazova.repository.UserRoleRepository;
 import kz.iitu.se242m.yesniyazova.security.JwtUtil;
 import kz.iitu.se242m.yesniyazova.service.AuthService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 

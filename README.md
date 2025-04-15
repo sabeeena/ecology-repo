@@ -20,7 +20,3 @@ Intended for everyday users — such as journalists, students, researchers, or g
   Receive alerts when monitored indicators exceed safe thresholds, configurable per user.
 - **Export Options**
   Download reports in PDF, Excel, or shareable web format. Public dashboards can be shared via links.
-
-## Initial database schema
-
-![image.png](assets/image.png)
