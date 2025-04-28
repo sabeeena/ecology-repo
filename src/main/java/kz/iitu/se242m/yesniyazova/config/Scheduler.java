@@ -32,7 +32,10 @@ public class Scheduler {
         log.info("[SCHEDULER] Notification check completed.");
     }
 
-    @Scheduled(cron = "0 */10 * * * *")
+    /**
+     * Temporary disabled
+     */
+    // @Scheduled(cron = "0 * * * * *")
     void hourlyAirQualityCheck() {
         log.info("[SCHEDULER] Updating air quality data...");
         airQualityService.pullCurrent();
@@ -42,6 +45,7 @@ public class Scheduler {
     @Scheduled(initialDelay = 10_000, fixedDelay = Long.MAX_VALUE)
     void backfillOnce() {
         if (historyDone) return;
+        if (airQualityService.countSamples() > 0) return;
         airQualityService.backfillHistory();
         historyDone = true;
     }

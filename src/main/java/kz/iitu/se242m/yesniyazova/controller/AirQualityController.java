@@ -1,12 +1,11 @@
 package kz.iitu.se242m.yesniyazova.controller;
 
 import kz.iitu.se242m.yesniyazova.entity.AirSample;
+import kz.iitu.se242m.yesniyazova.entity.SamplePoint;
+import kz.iitu.se242m.yesniyazova.entity.dto.AirFilterDto;
 import kz.iitu.se242m.yesniyazova.service.AirQualityService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -23,5 +22,10 @@ public class AirQualityController {
     @GetMapping("{cityId}/latest")
     public List<AirSample> latest(@PathVariable Long cityId) {
         return airQualityService.latestByCity(cityId);
+    }
+
+    @GetMapping("dashboard")
+    public List<SamplePoint> findAllByFilter(@RequestBody AirFilterDto filter) {
+        return airQualityService.findByFilter(filter);
     }
 }

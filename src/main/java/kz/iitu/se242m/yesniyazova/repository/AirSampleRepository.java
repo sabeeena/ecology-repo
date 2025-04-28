@@ -8,6 +8,6 @@ import org.springframework.stereotype.Repository;
 import java.util.Optional;
 
 @Repository
-public interface AirSampleRepository extends JpaRepository<AirSample, Long> {
+public interface AirSampleRepository extends JpaRepository<AirSample, Long>, AirSampleRepositoryCustom {
     Optional<AirSample> findTopByCityOrderByTsDesc(City city);
 }

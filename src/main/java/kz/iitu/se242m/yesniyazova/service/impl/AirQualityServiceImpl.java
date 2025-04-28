@@ -3,6 +3,8 @@ package kz.iitu.se242m.yesniyazova.service.impl;
 import kz.iitu.se242m.yesniyazova.client.OpenWeatherClient;
 import kz.iitu.se242m.yesniyazova.entity.AirSample;
 import kz.iitu.se242m.yesniyazova.entity.City;
+import kz.iitu.se242m.yesniyazova.entity.SamplePoint;
+import kz.iitu.se242m.yesniyazova.entity.dto.AirFilterDto;
 import kz.iitu.se242m.yesniyazova.repository.AirSampleRepository;
 import kz.iitu.se242m.yesniyazova.repository.CityRepository;
 import kz.iitu.se242m.yesniyazova.service.AirQualityService;
@@ -46,6 +48,14 @@ public class AirQualityServiceImpl implements AirQualityService {
 
     public List<AirSample> latestByCity(Long id) {
         return airSampleRepository.findTopByCityOrderByTsDesc(cityRepository.getReferenceById(id)).stream().toList();
+    }
+
+    public List<SamplePoint> findByFilter(AirFilterDto filter) {
+        return airSampleRepository.findPollutantHistory(filter.getCityId(), filter.getFrom(), filter.getTo(), filter.getPollutant());
+    }
+
+    public long countSamples() {
+        return airSampleRepository.count();
     }
 
     private AirSample mapEntry(City city, OpenWeatherClient.Record.Entry entry) {
