@@ -1,0 +1,21 @@
+:root{
+    --eco-green-50 : #f3faf5;
+    --eco-green-100: #e3f5e8;
+    --eco-green-200: #c9e9d3;
+    --eco-green-300: #a7dab6;
+    --eco-green-400: #7ecb97;
+    --eco-green-500: #56bc7a;
+    --eco-green-600: #3ca663;
+    --eco-green-700: #2d8950;
+    --eco-green-800: #256d41;
+    --eco-green-900: #1f5936;
+}
+body{ background:var(--eco-green-50); }
+.navbar{ background:var(--eco-green-500)!important; }
+.btn-eco{ background:var(--eco-green-500); border:none; }
+.btn-eco:hover{ background:var(--eco-green-600); }
+.badge-aqi-1{ background:#53c655!important; }   /* good  */
+.badge-aqi-2{ background:#b4e276!important; }   /* fair  */
+.badge-aqi-3{ background:#f0c25b!important; }   /* mod   */
+.badge-aqi-4{ background:#f28c4e!important; }   /* poor  */
+.badge-aqi-5{ background:#e55050!important; }   /* vpoor */
