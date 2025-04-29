@@ -8,12 +8,17 @@ export default function Dashboard(){
     const [points,setPts]=useState([]), [poll,setPoll]=useState('aqi');
     const [loading,setL]=useState(false),[err,setErr]=useState('');
 
-    const load=async f=>{
-        setL(true); setErr(''); setPts([]);
-        try{
-            const {data}=await api.post('/air/dashboard',f);
-            setPts(data); setPoll(f.pollutant);
-        }catch{setErr('Ошибка загрузки');}
+    const load = async f => {
+        setL(true);
+        setErr('');
+        setPts([]);
+        try {
+            const {data} = await api.post('/air/dashboard', f);
+            setPts(data);
+            setPoll(f.pollutant);
+        } catch {
+            setErr('Ошибка загрузки');
+        }
         setL(false);
     };
 

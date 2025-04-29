@@ -30,7 +30,7 @@ export default function DashboardFilter({onSearch}) {
 
     /** При первой отрисовке – загрузить список городов */
     useEffect(()=>{
-        api.get('/cities').then(r => setCities(r.data))
+        api.get('/reference/cities').then(r => setCities(r.data))
             .catch(()=> setCities([]));
     },[]);
 

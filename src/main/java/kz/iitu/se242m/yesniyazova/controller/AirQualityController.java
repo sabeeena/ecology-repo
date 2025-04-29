@@ -24,7 +24,7 @@ public class AirQualityController {
         return airQualityService.latestByCity(cityId);
     }
 
-    @GetMapping("dashboard")
+    @PostMapping("dashboard")
     public List<SamplePoint> findAllByFilter(@RequestBody AirFilterDto filter) {
         return airQualityService.findByFilter(filter);
     }
