@@ -38,8 +38,8 @@ public class AirQualityServiceImpl implements AirQualityService {
     }
 
     public void backfillHistory() {
-        long start = Instant.parse("2025-03-15T00:00:00Z").getEpochSecond();
-        long end   = Instant.now().minus(1, ChronoUnit.HOURS).getEpochSecond();
+        long start = Instant.now().minus(7, ChronoUnit.DAYS).getEpochSecond();
+        long end = Instant.now().getEpochSecond();
         cityRepository.findAll().forEach(c -> {
             var record = openWeatherClient.fetchHistory(c, start, end);
             record.list.forEach(e -> airSampleRepository.save(mapEntry(c, e)));
@@ -58,7 +58,7 @@ public class AirQualityServiceImpl implements AirQualityService {
         return airSampleRepository.count();
     }
 
-    private AirSample mapEntry(City city, OpenWeatherClient.Record.Entry entry) {
+    private AirSample mapEntry(City city, OpenWeatherClient.AirRecord.Entry entry) {
         AirSample sample = new AirSample();
         sample.setCity(city);
         sample.setTs(Instant.ofEpochSecond(entry.dt));

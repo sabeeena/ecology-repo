@@ -15,31 +15,65 @@ public class OpenWeatherClient {
     @Value("${openweather.apikey}")
     String key;
 
-    public Record fetchNow(City city) {
+    public AirRecord fetchNow(City city) {
         return webClient.get()
                 .uri("/data/2.5/air_pollution?lat={lat}&lon={lon}&appid={k}",
                         city.getLat(), city.getLon(), key)
                 .retrieve()
-                .bodyToMono(Record.class)
+                .bodyToMono(AirRecord.class)
                 .block();
     }
 
-    public Record fetchHistory(City city, long start, long end) {
+    public AirRecord fetchHistory(City city, long start, long end) {
         return webClient.get()
                 .uri("/data/2.5/air_pollution/history?lat={lat}&lon={lon}&start={s}&end={e}&appid={k}",
                         city.getLat(), city.getLon(), start, end, key)
                 .retrieve()
-                .bodyToMono(Record.class)
+                .bodyToMono(AirRecord.class)
                 .block();
     }
 
-    public static class Record {
+    public FireRecord fetchFireIndex(City city) {
+        return webClient.get()
+                .uri("/data/2.5/fwi?lat={lat}&lon={lon}&appid={k}",
+                        city.getLat(), city.getLon(), key)
+                .retrieve()
+                .bodyToMono(FireRecord.class)
+                .block();
+    }
+
+    public static class AirRecord {
         public java.util.List<Entry> list;
         public static class Entry{
             public Main main;
             public Map<String,Double> components;
             public long dt;
             public static class Main{ public int aqi; }
+        }
+    }
+
+    public static class FireRecord {
+        public Coord coord;
+        public java.util.List<Entry> list;
+
+        public static class Coord {
+            public double lon;
+            public double lat;
+        }
+
+        public static class Entry {
+            public Main main;
+            public DangerRating danger_rating;
+            public long dt;
+
+            public static class Main {
+                public double fwi;
+            }
+
+            public static class DangerRating {
+                public String description;
+                public String value;
+            }
         }
     }
 }

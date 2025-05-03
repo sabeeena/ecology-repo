@@ -206,7 +206,7 @@ public class ApplicationScenarioTests {
         AirQualityServiceImpl svc;
 
         City almaty;
-        OpenWeatherClient.Record.Entry entry;
+        OpenWeatherClient.AirRecord.Entry entry;
 
         @BeforeEach void init() {
             svc = new AirQualityServiceImpl();
@@ -216,8 +216,8 @@ public class ApplicationScenarioTests {
             setPrivateField(svc, "openWeatherClient", ow);
 
             almaty = new City("Almaty", 43.2, 76.8);
-            entry = new OpenWeatherClient.Record.Entry();
-            entry.main = new OpenWeatherClient.Record.Entry.Main(); entry.main.aqi = 2;
+            entry = new OpenWeatherClient.AirRecord.Entry();
+            entry.main = new OpenWeatherClient.AirRecord.Entry.Main(); entry.main.aqi = 2;
             entry.components = Map.of("co", 100.0, "pm2_5", 5.5);
             entry.dt = Instant.now().getEpochSecond();
         }
@@ -227,7 +227,7 @@ public class ApplicationScenarioTests {
          */
         @Test void pullCurrent_saves_sample() {
             when(cityRepo.findAll()).thenReturn(List.of(almaty));
-            var rec = new OpenWeatherClient.Record(); rec.list = List.of(entry);
+            var rec = new OpenWeatherClient.AirRecord(); rec.list = List.of(entry);
             when(ow.fetchNow(almaty)).thenReturn(rec);
 
             svc.pullCurrent();
