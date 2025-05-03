@@ -2,6 +2,7 @@ package kz.iitu.se242m.yesniyazova.config;
 
 import kz.iitu.se242m.yesniyazova.service.AirQualityService;
 import kz.iitu.se242m.yesniyazova.service.FireWeatherService;
+import kz.iitu.se242m.yesniyazova.service.WeatherService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -18,6 +19,9 @@ public class Scheduler {
 
     @Autowired
     private FireWeatherService fireWeatherService;
+
+    @Autowired
+    private WeatherService weatherService;
 
     private static boolean historyDone = false;
 
@@ -37,7 +41,7 @@ public class Scheduler {
     }
 
     /**
-     * Temporary disabled
+     * Temporary disabled (Request limit)
      */
     // @Scheduled(cron = "0 0 * * * *") // Every hour
     void hourlyAirQualityCheck() {
@@ -56,6 +60,16 @@ public class Scheduler {
         log.info("[SCHEDULER] Fire index data update completed.");
     }
 
+    /**
+     * Temporary disabled (Request limit)
+     */
+    // @Scheduled(cron = "0 0 * * * *") // Every hour
+    public void pullHourlyWeather() {
+        log.info("[SCHEDULER] Updating weather data...");
+        airQualityService.pullCurrent();
+        log.info("[SCHEDULER] Weather update completed.");
+    }
+
     @Scheduled(initialDelay = 10_000, fixedDelay = Long.MAX_VALUE)
     void backfillOnce() {
         log.info("[SCHEDULER] Backfilling DB...");
@@ -70,6 +84,11 @@ public class Scheduler {
 //        if (fireWeatherService.countSamples() <= 0) {
 //            fireWeatherService.pullCurrent();
 //        }
+
+        log.info("[SCHEDULER] Loading weather data...");
+        if (weatherService.countSamples() <= 0) {
+            weatherService.pullCurrent();
+        }
 
         historyDone = true;
         log.info("[SCHEDULER] Backfilling DB completed.");

@@ -1,7 +1,11 @@
 package kz.iitu.se242m.yesniyazova.client;
 
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import kz.iitu.se242m.yesniyazova.entity.City;
+import kz.iitu.se242m.yesniyazova.entity.dto.WeatherRecord;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
 
@@ -10,7 +14,17 @@ import java.util.Map;
 @Component
 public class OpenWeatherClient {
 
-    private final WebClient webClient = WebClient.create("https://api.openweathermap.org");
+    private final WebClient webClient;
+    private final XmlMapper xmlMapper;
+
+    public OpenWeatherClient() {
+        this.xmlMapper = (XmlMapper) new XmlMapper()
+                .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+
+        this.webClient = WebClient.builder()
+                .baseUrl("https://api.openweathermap.org")
+                .build();
+    }
 
     @Value("${openweather.apikey}")
     String key;
@@ -40,6 +54,22 @@ public class OpenWeatherClient {
                 .retrieve()
                 .bodyToMono(FireRecord.class)
                 .block();
+    }
+
+    public WeatherRecord fetchWeather(City city) {
+        String xmlResponse = webClient.get()
+                .uri("/data/2.5/weather?lat={lat}&lon={lon}&appid={k}&mode=xml",
+                        city.getLat(), city.getLon(), key)
+                .accept(MediaType.APPLICATION_XML)
+                .retrieve()
+                .bodyToMono(String.class)
+                .block();
+
+        try {
+            return xmlMapper.readValue(xmlResponse, WeatherRecord.class);
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to parse XML response", e);
+        }
     }
 
     public static class AirRecord {
