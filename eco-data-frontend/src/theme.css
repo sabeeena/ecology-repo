@@ -11,7 +11,9 @@
     --eco-green-900: #1f5936;
 }
 body{ background:var(--eco-green-50); }
-.navbar{ background:var(--eco-green-500)!important; }
+.navbar {
+    background: var(--eco-green-700) !important;
+}
 .btn-eco{ background:var(--eco-green-500); border:none; }
 .btn-eco:hover{ background:var(--eco-green-600); }
 .badge-aqi-1{ background:#53c655!important; }   /* good  */

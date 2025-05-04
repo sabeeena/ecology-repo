@@ -43,16 +43,16 @@ export default function DashboardFilter({onSearch}) {
     return (
         <Form className="mb-3">
             <Row className="g-2">
-                {/* показатель */}
                 <Col md={3}>
+                    <Form.Label>Показатель</Form.Label>
                     <Form.Select value={filter.pollutant}
                                  onChange={e=>change('pollutant', e.target.value)}>
                         {pollutants.map(p=> <option key={p} value={p}>{p.toUpperCase()}</option>)}
                     </Form.Select>
                 </Col>
 
-                {/* город */}
                 <Col md={3}>
+                    <Form.Label>Город</Form.Label>
                     <Form.Select value={filter.cityId}
                                  onChange={e=>change('cityId', e.target.value || '')}>
                         <option value="">– Все города –</option>
@@ -60,23 +60,23 @@ export default function DashboardFilter({onSearch}) {
                     </Form.Select>
                 </Col>
 
-                {/* дата-время от */}
                 <Col md={2}>
+                    <Form.Label>Дата начала</Form.Label>
                     <Form.Control type="datetime-local"
                                   defaultValue={filter.from.slice(0,16)}
                                   onChange={e=>change('from', new Date(e.target.value).toISOString())}/>
                 </Col>
 
-                {/* дата-время до */}
                 <Col md={2}>
+                    <Form.Label>Дата конца</Form.Label>
                     <Form.Control type="datetime-local"
                                   defaultValue={filter.to.slice(0,16)}
                                   onChange={e=>change('to', new Date(e.target.value).toISOString())}/>
                 </Col>
 
-                {/* кнопка */}
-                <Col md={2}>
-                    <Button className="btn-eco w-100" onClick={submit}>
+                <Col md={2} className="d-flex align-items-end">
+                    <Form.Label>&nbsp;</Form.Label>
+                    <Button className="w-100 shadow-sm" variant="success" onClick={submit}>
                         Показать
                     </Button>
                 </Col>
