@@ -1,6 +1,6 @@
-# 🌿 Aeris – Environmental Data Reporting Tool
+# 🌿 EcoData – Environmental Data Reporting Tool
 
-*Aeris* is a web-based platform that allows users to generate environmental reports and view ecological data from multiple public sources. It is designed to help people better understand the state of the environment in a specific region or over time by providing ready-made dashboards and customisable reports.
+*EcoData* is a web-based platform that allows users to generate environmental reports and view ecological data from multiple public sources. It is designed to help people better understand the state of the environment in a specific region or over time by providing ready-made dashboards and customisable reports.
 
 The system connects to open data APIs, processes the information, and presents it in a clear, visual format. Users can choose specific indicators, set filters by location and time, and receive updates when pollution levels exceed safe thresholds.
 

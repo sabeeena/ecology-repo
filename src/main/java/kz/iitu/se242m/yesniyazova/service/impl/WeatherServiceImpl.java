@@ -2,7 +2,9 @@ package kz.iitu.se242m.yesniyazova.service.impl;
 
 import kz.iitu.se242m.yesniyazova.client.OpenWeatherClient;
 import kz.iitu.se242m.yesniyazova.entity.City;
+import kz.iitu.se242m.yesniyazova.entity.WeatherHistoryResponse;
 import kz.iitu.se242m.yesniyazova.entity.WeatherSample;
+import kz.iitu.se242m.yesniyazova.entity.dto.WeatherFilterDto;
 import kz.iitu.se242m.yesniyazova.entity.dto.WeatherRecord;
 import kz.iitu.se242m.yesniyazova.repository.CityRepository;
 import kz.iitu.se242m.yesniyazova.repository.WeatherSampleRepository;
@@ -27,12 +29,24 @@ public class WeatherServiceImpl implements WeatherService {
     @Autowired
     private WeatherSampleRepository weatherSampleRepository;
 
+    @Override
     public void pullCurrent() {
         cityRepository.findAll().forEach(this::saveNow);
     }
 
+    @Override
     public long countSamples() {
         return weatherSampleRepository.count();
+    }
+
+    @Override
+    public WeatherHistoryResponse history(WeatherFilterDto filterDto) {
+        return new WeatherHistoryResponse(
+                weatherSampleRepository.findWeatherHistory(filterDto.getCityId(), filterDto.getFrom(), filterDto.getTo(), "temperature"),
+                weatherSampleRepository.findWeatherHistory(filterDto.getCityId(), filterDto.getFrom(), filterDto.getTo(), "humidity"),
+                weatherSampleRepository.findWeatherHistory(filterDto.getCityId(), filterDto.getFrom(), filterDto.getTo(), "pressure"),
+                weatherSampleRepository.findWeatherHistory(filterDto.getCityId(), filterDto.getFrom(), filterDto.getTo(), "wind_speed")
+        );
     }
 
     private void saveNow(City city) {
