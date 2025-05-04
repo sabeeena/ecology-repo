@@ -3,6 +3,7 @@ import {Alert,Spinner} from 'react-bootstrap';
 import api from '../api/axiosClient';
 import DashboardFilter from '../components/DashboardFilter';
 import HistoryChart    from '../components/HistoryChart';
+import AqiInfoCard from "../components/AqiInfoCard";
 
 export default function Dashboard(){
     const [points,setPts]=useState([]), [poll,setPoll]=useState('aqi');
@@ -23,7 +24,8 @@ export default function Dashboard(){
     };
 
     return<>
-        <h3 className="mb-3">Качество воздуха</h3>
+        <h3 className="mb-3">Air Pollution</h3>
+        <AqiInfoCard/>
         <DashboardFilter onSearch={load}/>
         {err && <Alert variant="danger">{err}</Alert>}
         {loading && <Spinner/>}
