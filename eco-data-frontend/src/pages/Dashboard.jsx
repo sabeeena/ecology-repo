@@ -24,7 +24,7 @@ export default function Dashboard(){
     };
 
     return<>
-        <h3 className="mb-3">Air Pollution</h3>
+        <h3 className="mb-3">Загрязнение воздуха</h3>
         <AqiInfoCard/>
         <DashboardFilter onSearch={load}/>
         {err && <Alert variant="danger">{err}</Alert>}
