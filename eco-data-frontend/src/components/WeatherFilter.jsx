@@ -11,16 +11,19 @@ export default function WeatherFilter({onSearch}) {
         to    : dayjs().endOf('hour').toISOString()
     });
 
-    /** 1) пытаемся получить геолокацию → /find-city
-     2) загружаем справочник городов */
     useEffect(()=>{
         api.get('/reference/cities').then(r=>setCities(r.data));
 
-        if ('geolocation' in navigator)
-            navigator.geolocation.getCurrentPosition(({coords})=>{
-                api.post('/find-city', {lat:coords.latitude, lon:coords.longitude})
-                    .then(r=>setFilter(f=>({...f, cityId:r.data.id})));
+        if ('geolocation' in navigator) {
+            navigator.geolocation.getCurrentPosition(({ coords }) => {
+                api.get('/reference/find-city', {
+                    params: {
+                        lat: coords.latitude,
+                        lon: coords.longitude
+                    }
+                }).then(r => setFilter(f => ({ ...f, cityId: r.data.id })));
             });
+        }
     },[]);
 
     const change=(k,v)=>setFilter({...filter,[k]:v});

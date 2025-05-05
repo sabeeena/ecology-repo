@@ -1,5 +1,5 @@
 import {useEffect, useState} from 'react';
-import {Form, Button, Card, Row, Col, Alert, Spinner} from 'react-bootstrap';
+import {Form, Button, Card, Row, Col, Alert, Spinner, Container} from 'react-bootstrap';
 import {useNavigate} from 'react-router-dom';
 import api from '../api/axiosClient';
 import ConfirmModal from '../components/ConfirmModal';
@@ -7,24 +7,20 @@ import ConfirmModal from '../components/ConfirmModal';
 export default function Profile() {
     const nav = useNavigate();
 
-    /* --- локальное состояние --- */
     const [user, setUser]       = useState(null);
     const [edit, setEdit]       = useState(false);
     const [saveLoad, setSaveLoad] = useState(false);
     const [err,  setErr]        = useState('');
-    const [ask, setAsk]         = useState(false);   // показать модал
+    const [ask, setAsk]         = useState(false);
 
-    /* --- загрузить профиль при первом рендере --- */
     useEffect(() => {
         api.get('/profile')
             .then(r => setUser(r.data))
             .catch(() => setErr('Не удалось загрузить профиль'));
     }, []);
 
-    /* --- хэндлер изменения полей --- */
     const change = (key, val) => setUser({...user, [key]: val});
 
-    /* --- сохранить изменения --- */
     const save = async () => {
         setSaveLoad(true); setErr('');
         try {
@@ -42,7 +38,6 @@ export default function Profile() {
         setSaveLoad(false);
     };
 
-    /* --- деактивировать --- */
     const deactivate = async () => {
         try {
             await api.delete('/profile');
@@ -56,7 +51,7 @@ export default function Profile() {
     if (!user) return <Spinner />;
 
     return (
-        <>
+        <Container className="py-4">
             <h3 className="mb-3">Профиль пользователя</h3>
 
             {err && <Alert variant="danger">{err}</Alert>}
@@ -143,7 +138,6 @@ export default function Profile() {
                 </Card.Body>
             </Card>
 
-            {/* ---- Диалог подтверждения ---- */}
             <ConfirmModal
                 show={ask}
                 onHide={() => setAsk(false)}
@@ -151,6 +145,6 @@ export default function Profile() {
                 title="Деактивировать аккаунт?"
                 body="Ваш профиль будет помечен как неактивный, а доступ к системе прекращён."
             />
-        </>
+        </Container>
     );
 }

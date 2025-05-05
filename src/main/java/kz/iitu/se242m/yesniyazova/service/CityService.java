@@ -6,4 +6,5 @@ import java.util.List;
 
 public interface CityService {
     List<City> listAllCities();
+    City findNearestCity(double lat, double lon);
 }

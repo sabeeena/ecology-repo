@@ -5,7 +5,7 @@ import Login    from './pages/Login';
 import Register from './pages/Register';
 import Dashboard from './pages/Dashboard';
 import Profile   from './pages/Profile';
-import Admin     from './pages/Admin';
+import Admin     from './pages/AdminPage';
 
 export default function App(){
     const token = !!localStorage.getItem('token');

@@ -17,4 +17,8 @@ public class CityServiceImpl implements CityService {
     public List<City> listAllCities() {
         return cityRepository.findAll();
     }
+
+    public City findNearestCity(double lat, double lon) {
+        return cityRepository.findNearestCity(lat, lon);
+    }
 }
