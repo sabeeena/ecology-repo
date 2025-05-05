@@ -45,6 +45,7 @@ export default function Dashboard(){
         <Container className="py-4">
 
             <h3 className="mb-3">Погода</h3>
+            <p>Источник: <a href="https://openweathermap.org/current" target="_blank">OpenWeather</a>.</p>
 
             <Card className="mb-4 shadow-sm" style={{ backgroundColor: '#d0e7d2' }}>
                 <Card.Body>
@@ -59,23 +60,34 @@ export default function Dashboard(){
                 <>
                     <WeatherCard
                         icon="🌡️" title="Температура" unit="°C"
-                        latest={weather.temp.at(-1)?.value ?? ''}
-                        points={weather.temp} color="#E55C5C"
+                        latest={weather.temp.at(-1) ? (weather.temp.at(-1).value - 273.15).toFixed(1) : ''}
+                        points={weather.temp.map(p => ({
+                            ts: p.ts,
+                            value: p.value - 273.15
+                        }))}
+                        color="#E55C5C"
+                        updatedAt={weather.temp.at(-1)?.ts}
                     />
                     <WeatherCard
                         icon="💧" title="Влажность" unit="%"
                         latest={weather.hum.at(-1)?.value ?? ''}
-                        points={weather.hum}  color="#56bc7a"
+                        points={weather.hum}
+                        color="#56bc7a"
+                        updatedAt={weather.hum.at(-1)?.ts}
                     />
                     <WeatherCard
                         icon="🔽" title="Давление" unit=" гПа"
                         latest={weather.press.at(-1)?.value ?? ''}
-                        points={weather.press} color="#4a8cc7"
+                        points={weather.press}
+                        color="#4a8cc7"
+                        updatedAt={weather.press.at(-1)?.ts}
                     />
                     <WeatherCard
                         icon="🍃" title="Скорость ветра" unit=" м/с"
                         latest={weather.wind.at(-1)?.value ?? ''}
-                        points={weather.wind} color="#e28f41"
+                        points={weather.wind}
+                        color="#e28f41"
+                        updatedAt={weather.wind.at(-1)?.ts}
                     />
                 </>
             )}
