@@ -7,14 +7,33 @@ export default function UserFormModal({ show, user, roles, onHide, onSave }) {
 
     useEffect(()=> setU(user ?? {
         firstName:'',lastName:'',username:'',email:'',phoneNumber:'',
-        role:(roles[0]?.code)||'',isActive:true,password:''
+        role:(roles[0]?.code)||'',active:true,password:''
     }), [user,roles]);
 
     const change=(k,v)=>setU({...u,[k]:v});
 
-    const submit=async()=>{
-        if(u.id) await updateUser(u.id,u); else await createUser(u);
-        onSave(); onHide();
+    const submit = async () => {
+        try {
+            const roleObj = roles.find(r => r.code === u.role);
+            if (!roleObj) {
+                alert('Не удалось определить роль');
+                return;
+            }
+
+            const payload = { ...u, role: roleObj };
+
+            if (u.id) {
+                await updateUser(u.id, payload);
+            } else {
+                await createUser(payload);
+            }
+
+            onSave();
+            onHide();
+        } catch (e) {
+            console.error(e);
+            alert('Не удалось сохранить пользователя');
+        }
     };
 
     return (
@@ -40,8 +59,8 @@ export default function UserFormModal({ show, user, roles, onHide, onSave }) {
                             </Form.Select>
                         </Col>
                         <Col md={4}>
-                            <Form.Select value={u.isActive}
-                                         onChange={e=>change('isActive', e.target.value==='true')}>
+                            <Form.Select value={u.active}
+                                         onChange={e=>change('active', e.target.value==='true')}>
                                 <option value="true">Активен</option>
                                 <option value="false">Блокирован</option>
                             </Form.Select>

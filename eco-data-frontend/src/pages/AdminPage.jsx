@@ -7,6 +7,7 @@ import AdminUserFilter from '../components/AdminUserFilter';
 import AdminUserTable  from '../components/AdminUserTable';
 import UserFormModal   from '../components/UserFormModal';
 import ConfirmModal    from '../components/ConfirmModal';
+import api from "../api/axiosClient";
 
 export default function AdminPage() {
     const [roles,  setRoles]  = useState([]);
@@ -19,6 +20,20 @@ export default function AdminPage() {
     const [showForm,setShowForm]  = useState(false);
     const [delUser,setDelUser]    = useState(null);
     const [showDel,setShowDel]    = useState(false);
+
+    const [currentUsername, setCurrentUsername] = useState('');
+
+    useEffect(() => {
+        api.get('/profile')
+            .then(r => {
+                const username = r.data.username;
+                localStorage.setItem('username', username);
+                setCurrentUsername(username);
+            })
+            .catch(() => {
+                console.warn('Не удалось получить username');
+            });
+    }, []);
 
     useEffect(()=>{ fetchRoles().then(r=>setRoles(r.data)); },[]);
 
@@ -57,7 +72,8 @@ export default function AdminPage() {
             <UserFormModal show={showForm} user={editUser} roles={roles}
                            onHide={()=>setShowForm(false)} onSave={loadUsers}/>
             <ConfirmModal  show={showDel}
-                           text={`Удалить пользователя ${delUser?.username}?`}
+                           title={`Удалить пользователя ${delUser?.username}?`}
+                           body="Пользователь будет удален безвозвратно. Вы всегда можете деактивировать пользователя в настройках."
                            onConfirm={async()=>{
                                await deleteUser(delUser.id); setShowDel(false); loadUsers();
                            }}

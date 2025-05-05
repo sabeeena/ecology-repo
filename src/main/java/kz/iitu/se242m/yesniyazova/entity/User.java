@@ -1,17 +1,18 @@
 package kz.iitu.se242m.yesniyazova.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.Data;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
 
 @Entity
 @Data
 @Table(name = "users")
+@EntityListeners(AuditingEntityListener.class)
 public class User {
     @Id
     @Column(name = "id")
@@ -45,7 +46,7 @@ public class User {
     private boolean isActive;
 
     @CreatedDate
-    @Column(name = "createdAt")
+    @Column(name = "createdAt", updatable = false)
     private LocalDateTime createdAt;
 
     @LastModifiedDate
