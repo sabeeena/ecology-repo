@@ -56,7 +56,7 @@ export default function AdminPage() {
                              onChange={setFilter}
                              onSearch={loadUsers}/>
 
-            <Button className="mb-3 btn-eco"
+            <Button className="mb-3 shadow-sm" variant="success"
                     onClick={()=>{ setEditUser(null); setShowForm(true); }}>
                 ➕ Создать
             </Button>
