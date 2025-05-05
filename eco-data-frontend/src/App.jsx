@@ -16,16 +16,20 @@ export default function App(){
             admin && role!=='ADMIN' ? <Navigate to="/"/> :
                 children;
 
-    return(
+    return (
         <BrowserRouter>
-            <NavBar/>
+            <NavBar />
             <Container className="py-3">
                 <Routes>
-                    <Route path="/login" element={<Login/>}/>
-                    <Route path="/register" element={<Register/>}/>
-                    <Route path="/" element={<Private><Dashboard/></Private>}/>
-                    <Route path="/profile" element={<Private><Profile/></Private>}/>
-                    <Route path="/admin" element={<Private admin><Admin/></Private>}/>
+                    <Route path="/login" element={<Login />} />
+                    <Route path="/register" element={<Register />} />
+
+                    <Route path="/" element={<Dashboard />} />
+
+                    <Route path="/profile" element={<Private><Profile /></Private>} />
+                    <Route path="/admin" element={<Private admin><Admin /></Private>} />
+
+                    <Route path="*" element={<Navigate to="/" />} />
                 </Routes>
             </Container>
         </BrowserRouter>

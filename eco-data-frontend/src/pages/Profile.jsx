@@ -1,35 +1,156 @@
-import {useEffect,useState} from 'react';
-import {Form,Button,Alert,Spinner} from 'react-bootstrap';
+import {useEffect, useState} from 'react';
+import {Form, Button, Card, Row, Col, Alert, Spinner} from 'react-bootstrap';
+import {useNavigate} from 'react-router-dom';
 import api from '../api/axiosClient';
+import ConfirmModal from '../components/ConfirmModal';
 
-export default function Profile(){
-    const [u,setU]=useState(null), [msg,setMsg]=useState('');
+export default function Profile() {
+    const nav = useNavigate();
 
-    useEffect(()=>{
-        api.get('/profile').then(r=>setU(r.data));
-    },[]);
+    /* --- локальное состояние --- */
+    const [user, setUser]       = useState(null);
+    const [edit, setEdit]       = useState(false);
+    const [saveLoad, setSaveLoad] = useState(false);
+    const [err,  setErr]        = useState('');
+    const [ask, setAsk]         = useState(false);   // показать модал
 
-    const save=()=> api.patch('/profile',u)
-        .then(()=>setMsg('Сохранено'))
-        .catch(()=>setMsg('Ошибка'));
+    /* --- загрузить профиль при первом рендере --- */
+    useEffect(() => {
+        api.get('/profile')
+            .then(r => setUser(r.data))
+            .catch(() => setErr('Не удалось загрузить профиль'));
+    }, []);
 
-    const deactivate=()=> api.delete('/profile')
-        .then(()=>{localStorage.clear(); window.location='/login';});
+    /* --- хэндлер изменения полей --- */
+    const change = (key, val) => setUser({...user, [key]: val});
 
-    if(!u) return <Spinner/>;
+    /* --- сохранить изменения --- */
+    const save = async () => {
+        setSaveLoad(true); setErr('');
+        try {
+            const patch = {
+                firstName: user.firstName,
+                lastName : user.lastName,
+                email    : user.email,
+                phoneNumber: user.phoneNumber
+            };
+            const {data} = await api.patch('/profile', patch);
+            setUser(data); setEdit(false);
+        } catch {
+            setErr('Ошибка сохранения данных');
+        }
+        setSaveLoad(false);
+    };
 
-    return<>
-        <h3>Профиль</h3>
-        {msg && <Alert>{msg}</Alert>}
-        <Form>
-            <Form.Control className="mb-2" value={u.firstName||''}
-                          onChange={e=>setU({...u,firstName:e.target.value})}/>
-            <Form.Control className="mb-2" value={u.lastName||''}
-                          onChange={e=>setU({...u,lastName:e.target.value})}/>
-            <Form.Control className="mb-2" value={u.email||''}
-                          onChange={e=>setU({...u,email:e.target.value})}/>
-            <Button className="btn-eco me-2" onClick={save}>Сохранить</Button>
-            <Button variant="outline-danger" onClick={deactivate}>Деактивировать</Button>
-        </Form>
-    </>;
+    /* --- деактивировать --- */
+    const deactivate = async () => {
+        try {
+            await api.delete('/profile');
+            localStorage.clear();
+            nav('/login');
+        } catch {
+            setErr('Не удалось деактивировать аккаунт');
+        }
+    };
+
+    if (!user) return <Spinner />;
+
+    return (
+        <>
+            <h3 className="mb-3">Профиль пользователя</h3>
+
+            {err && <Alert variant="danger">{err}</Alert>}
+
+            <Card className="shadow-sm">
+                <Card.Body>
+                    <Form>
+                        <Row className="g-3">
+                            <Col md={6}>
+                                <Form.Label>Имя</Form.Label>
+                                <Form.Control
+                                    disabled={!edit}
+                                    value={user.firstName ?? ''}
+                                    onChange={e => change('firstName', e.target.value)}
+                                />
+                            </Col>
+
+                            <Col md={6}>
+                                <Form.Label>Фамилия</Form.Label>
+                                <Form.Control
+                                    disabled={!edit}
+                                    value={user.lastName ?? ''}
+                                    onChange={e => change('lastName', e.target.value)}
+                                />
+                            </Col>
+
+                            <Col md={6}>
+                                <Form.Label>E-mail</Form.Label>
+                                <Form.Control
+                                    disabled={!edit}
+                                    type="email"
+                                    value={user.email ?? ''}
+                                    onChange={e => change('email', e.target.value)}
+                                />
+                            </Col>
+
+                            <Col md={6}>
+                                <Form.Label>Телефон</Form.Label>
+                                <Form.Control
+                                    disabled={!edit}
+                                    value={user.phoneNumber ?? ''}
+                                    onChange={e => change('phoneNumber', e.target.value)}
+                                />
+                            </Col>
+
+                            <Col md={6}>
+                                <Form.Label>Логин (username)</Form.Label>
+                                <Form.Control disabled value={user.username}/>
+                            </Col>
+
+                            <Col md={6}>
+                                <Form.Label>Роль</Form.Label>
+                                <Form.Control disabled value={user.role?.name ?? ''}/>
+                            </Col>
+                        </Row>
+
+                        <div className="d-flex gap-2 mt-4">
+                            {!edit && (
+                                <Button variant="success" onClick={() => setEdit(true)}>
+                                    Редактировать
+                                </Button>
+                            )}
+
+                            {edit && (
+                                <>
+                                    <Button variant="success" onClick={save} disabled={saveLoad}>
+                                        {saveLoad ? 'Сохраняю…' : 'Сохранить'}
+                                    </Button>
+                                    <Button variant="secondary" onClick={() => setEdit(false)}>
+                                        Отменить
+                                    </Button>
+                                </>
+                            )}
+
+                            <Button
+                                variant="outline-danger"
+                                className="ms-auto"
+                                onClick={() => setAsk(true)}
+                            >
+                                Деактивировать аккаунт
+                            </Button>
+                        </div>
+                    </Form>
+                </Card.Body>
+            </Card>
+
+            {/* ---- Диалог подтверждения ---- */}
+            <ConfirmModal
+                show={ask}
+                onHide={() => setAsk(false)}
+                onConfirm={deactivate}
+                title="Деактивировать аккаунт?"
+                body="Ваш профиль будет помечен как неактивный, а доступ к системе прекращён."
+            />
+        </>
+    );
 }
