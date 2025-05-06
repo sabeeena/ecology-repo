@@ -4,7 +4,7 @@ import {useNavigate} from 'react-router-dom';
 import api from '../api/axiosClient';
 import ConfirmModal from '../components/ConfirmModal';
 
-export default function Profile() {
+export default function Profile({ setToken, setRole }) {
     const nav = useNavigate();
 
     const [user, setUser]       = useState(null);
@@ -42,6 +42,8 @@ export default function Profile() {
         try {
             await api.delete('/profile');
             localStorage.clear();
+            setToken(null);
+            setRole(null);
             nav('/login');
         } catch {
             setErr('Не удалось деактивировать аккаунт');

@@ -7,6 +7,10 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 
+/**
+ * For test purposes only - not intended for production
+ */
+
 @Component
 class CitySeeder implements CommandLineRunner {
 

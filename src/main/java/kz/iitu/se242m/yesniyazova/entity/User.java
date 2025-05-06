@@ -1,5 +1,6 @@
 package kz.iitu.se242m.yesniyazova.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.Data;
@@ -13,6 +14,7 @@ import java.time.LocalDateTime;
 @Data
 @Table(name = "users")
 @EntityListeners(AuditingEntityListener.class)
+@JsonIgnoreProperties(value = {"createdAt", "modifiedAt", "password"}, allowGetters = true)
 public class User {
     @Id
     @Column(name = "id")
