@@ -13,19 +13,26 @@ services:
       - pgdata:/var/lib/postgresql/data
 
   backend:
-    image: openjdk:17
+    build:
+      context: .
     container_name: aeris-backend
-    volumes:
-      - ./target/app.jar:/app/app.jar
-    command: [ "java", "-jar", "/app/app.jar" ]
-    depends_on:
-      - postgres
     ports:
       - "8080:8080"
+    depends_on:
+      - postgres
     environment:
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/aeris
       SPRING_DATASOURCE_USERNAME: admin
       SPRING_DATASOURCE_PASSWORD: admin
+
+  frontend:
+    build:
+      context: ./eco-data-frontend
+    container_name: aeris-frontend
+    ports:
+      - "3000:80"
+    depends_on:
+      - backend
 
 volumes:
   pgdata:
