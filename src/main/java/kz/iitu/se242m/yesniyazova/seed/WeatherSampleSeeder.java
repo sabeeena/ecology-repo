@@ -7,6 +7,7 @@ import kz.iitu.se242m.yesniyazova.repository.CityRepository;
 import kz.iitu.se242m.yesniyazova.repository.WeatherSampleRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
@@ -28,7 +29,7 @@ public class WeatherSampleSeeder {
     private final Random random = new Random();
 
     @PostConstruct
-    @Transactional
+    @Transactional(isolation = Isolation.READ_COMMITTED)
     public void seedWeatherData() {
         if (weatherSampleRepository.count() > 0) {
             System.out.println("Weather data already exists, skipping seeding.");

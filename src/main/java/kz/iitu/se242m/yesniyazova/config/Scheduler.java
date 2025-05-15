@@ -25,7 +25,7 @@ public class Scheduler {
 
     private static boolean historyDone = false;
 
-    @Scheduled(cron = "0 */5 * * * *") // Every 5 minutes
+    @Scheduled(fixedRate = 5 * 60 * 1000) // Every 5 minutes
     public void sendPendingUserNotifications() {
         log.info("[SCHEDULER] Checking for pending notifications...");
 

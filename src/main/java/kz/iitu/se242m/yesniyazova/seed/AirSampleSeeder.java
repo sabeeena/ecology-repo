@@ -1,12 +1,15 @@
 package kz.iitu.se242m.yesniyazova.seed;
 
 import jakarta.annotation.PostConstruct;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import kz.iitu.se242m.yesniyazova.entity.AirSample;
 import kz.iitu.se242m.yesniyazova.entity.City;
 import kz.iitu.se242m.yesniyazova.repository.AirSampleRepository;
 import kz.iitu.se242m.yesniyazova.repository.CityRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
@@ -26,6 +29,9 @@ public class AirSampleSeeder {
     private final AirSampleRepository airSampleRepository;
     private final Random rnd = new Random();
 
+    @PersistenceContext
+    private final EntityManager em;
+
     private int randomAqi() {
         int[] weights = {35, 30, 20, 10, 5};
         int roll = rnd.nextInt(100);
@@ -38,13 +44,16 @@ public class AirSampleSeeder {
     }
 
     @PostConstruct
-    @Transactional
+    @Transactional(isolation = Isolation.READ_COMMITTED)
     public void seedAirSamples() {
 
         if (airSampleRepository.count() > 0) {
             System.out.println("Air-quality samples already exist – skipping seeder.");
             return;
         }
+
+        final int BATCH = 50;
+        int counter = 0;
 
         List<City> cities = cityRepository.findAll();
 
@@ -71,11 +80,16 @@ public class AirSampleSeeder {
                 s.setPm2_5(  10  + rnd.nextDouble()* (aqi*20));
                 s.setSo2  (  20  + rnd.nextDouble()* (aqi*65));
 
-                airSampleRepository.save(s);
+                em.persist(s);
+
+                if (++counter % BATCH == 0) {
+                    em.flush();
+                    em.clear();
+                }
+
                 ts = ts.plusHours(1);
             }
         }
-
-        System.out.println("Air-quality samples seeded for " + cities.size() + " cities.");
+        System.out.println("Air-quality samples seeded for " + cities.size() + " cities (" + counter + " rows).");
     }
 }

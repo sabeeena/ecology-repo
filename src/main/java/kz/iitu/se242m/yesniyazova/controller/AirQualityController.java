@@ -15,6 +15,7 @@ public class AirQualityController {
 
     @Autowired
     private AirQualityService airQualityService;
+
     public AirQualityController(AirQualityService airQualityService) {
         this.airQualityService = airQualityService;
     }
