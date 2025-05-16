@@ -11,6 +11,7 @@ services:
       POSTGRES_DB: aeris
     volumes:
       - pgdata:/var/lib/postgresql/data
+      - ./db-backup:/backup
 
   backend:
     build:
