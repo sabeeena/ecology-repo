@@ -8,6 +8,7 @@ import kz.iitu.se242m.yesniyazova.service.UserRoleService;
 import kz.iitu.se242m.yesniyazova.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
@@ -53,6 +54,7 @@ public class UserController {
     }
 
     @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable Long id) {
         userService.deleteById(id);
     }

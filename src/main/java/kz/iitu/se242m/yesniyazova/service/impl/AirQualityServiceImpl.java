@@ -9,6 +9,7 @@ import kz.iitu.se242m.yesniyazova.repository.AirSampleRepository;
 import kz.iitu.se242m.yesniyazova.repository.CityRepository;
 import kz.iitu.se242m.yesniyazova.service.AirQualityService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.time.temporal.ChronoUnit;
@@ -50,6 +51,7 @@ public class AirQualityServiceImpl implements AirQualityService {
         return airSampleRepository.findTopByCityOrderByTsDesc(cityRepository.getReferenceById(id)).stream().toList();
     }
 
+    @Cacheable("airSamples")
     public List<SamplePoint> findByFilter(AirFilterDto filter) {
         return airSampleRepository.findPollutantHistory(filter.getCityId(), filter.getFrom(), filter.getTo(), filter.getPollutant());
     }

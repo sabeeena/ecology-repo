@@ -3,6 +3,7 @@ package kz.iitu.se242m.yesniyazova.controller;
 import kz.iitu.se242m.yesniyazova.entity.Report;
 import kz.iitu.se242m.yesniyazova.service.ReportService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -36,6 +37,7 @@ public class ReportController {
     }
 
     @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable Long id) {
         reportService.delete(id);
     }

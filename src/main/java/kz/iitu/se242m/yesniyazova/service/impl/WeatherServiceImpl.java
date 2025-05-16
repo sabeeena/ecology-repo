@@ -10,6 +10,7 @@ import kz.iitu.se242m.yesniyazova.repository.CityRepository;
 import kz.iitu.se242m.yesniyazova.repository.WeatherSampleRepository;
 import kz.iitu.se242m.yesniyazova.service.WeatherService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
@@ -40,6 +41,7 @@ public class WeatherServiceImpl implements WeatherService {
     }
 
     @Override
+    @Cacheable("weatherSamples")
     public WeatherHistoryResponse history(WeatherFilterDto filterDto) {
         return new WeatherHistoryResponse(
                 weatherSampleRepository.findWeatherHistory(filterDto.getCityId(), filterDto.getFrom(), filterDto.getTo(), "temperature"),

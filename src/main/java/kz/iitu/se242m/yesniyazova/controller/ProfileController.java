@@ -2,6 +2,7 @@ package kz.iitu.se242m.yesniyazova.controller;
 
 import kz.iitu.se242m.yesniyazova.entity.User;
 import kz.iitu.se242m.yesniyazova.service.ProfileService;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
@@ -26,6 +27,7 @@ public class ProfileController {
     }
 
     @DeleteMapping
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deactivate(Authentication auth) {
         profileService.deactivate(auth.getName());
     }
