@@ -1,6 +1,7 @@
 package kz.iitu.se242m.yesniyazova.entity.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import kz.iitu.se242m.yesniyazova.validator.PhoneNumber;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -16,6 +17,7 @@ public class UserDto {
     private String lastName;
     private String fullName;
     private String username;
+    @PhoneNumber
     private String phoneNumber;
     private String email;
     private String role;
