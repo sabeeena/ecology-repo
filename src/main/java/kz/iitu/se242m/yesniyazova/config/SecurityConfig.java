@@ -41,6 +41,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/reference/**").permitAll()
                         .requestMatchers("/api/air/**").permitAll()
                         .requestMatchers("/api/weather/**").permitAll()
+                        .requestMatchers("/api/report/**").permitAll()
                         .requestMatchers("/api/admin/**").hasRole("ADMIN")
                         .anyRequest().authenticated()
                 )
